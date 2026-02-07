@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine Date 💘</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    h1 {
+      color: #e91e63;
+    }
+
+    .button-container {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    #yesBtn {
+      background-color: #e91e63;
+      color: white;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-120%, -50%);
+    }
+
+    #noBtn {
+      background-color: #ccc;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(20%, -50%);
+      transition: 0.2s;
+    }
+
+    /* IMAGE */
+    #imageContainer {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #imageContainer img {
+      width: 100%;
+      border-radius: 15px;
+    }
+
+    /* HAPPY TEXT */
+    #happyText {
+      display: none;
+      font-size: 20px;
+      color: #e91e63;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="card">
+    <h1 id="questionText">Would you like to go on a date with me this Valentine’s? 💘</h1>
+
+    <div class="button-container" id="buttonContainer">
+      <button id="yesBtn">YES 💖</button>
+      <button id="noBtn">NO 💔</button>
+    </div>
+
+    <!-- IMAGE -->
+    <div id="imageContainer">
+      <img src="emoji.jpg" alt="Happy emoji">
+    </div>
+
+    <!-- HAPPY TEXT -->
+    <div id="happyText">YAY! 💕 This is how happy I am right now 🥹 See you this Valentine!
+
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const container = document.querySelector(".button-container");
+    const questionText = document.getElementById("questionText");
+    const imageContainer = document.getElementById("imageContainer");
+    const happyText = document.getElementById("happyText");
+
+    // YES CLICK
+    yesBtn.addEventListener("click", () => {
+      // Hide question and buttons
+      questionText.style.display = "none";
+      container.style.display = "none";
+
+      // Show picture and happy text
+      imageContainer.style.display = "block";
+      happyText.style.display = "block";
+    });
+
+    // NO RUNS AWAY
+    noBtn.addEventListener("mouseover", () => {
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = containerRect.width - btnRect.width;
+      const maxY = containerRect.height - btnRect.height;
+
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+      noBtn.style.transform = "translate(0, 0)";
+    });
+  </script>
+
+</body>
+</html>
