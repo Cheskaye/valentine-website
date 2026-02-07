@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Valentine Date 💘</title>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,54 +14,53 @@
       justify-content: center;
       align-items: center;
       margin: 0;
+      overflow: hidden;
+      position: relative;
     }
 
     .card {
       background: white;
-      padding: 30px;
+      padding: 20px;
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       width: 90%;
       max-width: 400px;
       position: relative;
+      z-index: 2;
     }
 
     h1 {
       color: #e91e63;
+      font-size: 18px;
     }
 
     .button-container {
-      position: relative;
-      width: 100%;
-      height: 120px;
-      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 15px;
     }
 
     button {
-      padding: 12px 25px;
+      padding: 10px 20px;
       font-size: 16px;
       border: none;
       border-radius: 30px;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     #yesBtn {
       background-color: #e91e63;
       color: white;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-120%, -50%);
+      font-size: 16px;
     }
 
     #noBtn {
       background-color: #ccc;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(20%, -50%);
-      transition: 0.2s;
+      font-size: 16px;
     }
 
     /* IMAGE */
@@ -77,16 +77,29 @@
     /* HAPPY TEXT */
     #happyText {
       display: none;
-      font-size: 20px;
+      font-size: 18px;
       color: #e91e63;
       margin-top: 15px;
       font-weight: bold;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      animation: floatUp 2s linear forwards;
+      pointer-events: none; /* hearts don't block taps */
+    }
+
+    @keyframes floatUp {
+      0% {opacity: 1; transform: translateY(0) scale(1);}
+      100% {opacity: 0; transform: translateY(-150px) scale(1.5);}
     }
   </style>
 </head>
 <body>
 
-  <div class="card" id="card">
+  <div class="card">
     <h1 id="questionText">Would you like to go on a date with me this Valentine’s? 💘</h1>
 
     <div class="button-container" id="buttonContainer">
@@ -94,48 +107,80 @@
       <button id="noBtn">NO 💔</button>
     </div>
 
-    <!-- IMAGE -->
     <div id="imageContainer">
       <img src="emoji.jpg" alt="Happy emoji">
     </div>
 
-    <!-- HAPPY TEXT -->
-    <div id="happyText">YAY! 💕 This is how happy I am right now 🥹 See you this Valentine!
-
+    <div id="happyText">YAY! 💕 This is how happy I am right now 🥹 See you this Valentine!</div>
+  </div>
 
   <script>
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
-    const container = document.querySelector(".button-container");
     const questionText = document.getElementById("questionText");
     const imageContainer = document.getElementById("imageContainer");
     const happyText = document.getElementById("happyText");
 
-    // YES CLICK
-    yesBtn.addEventListener("click", () => {
-      // Hide question and buttons
-      questionText.style.display = "none";
-      container.style.display = "none";
+    let yesSize = 16;
+    let noSize = 16;
+    const colors = ['#f06292','#ba68c8','#ffb74d','#4db6ac','#81d4fa'];
 
-      // Show picture and happy text
+    // Function to create floating heart
+    function createHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = x + 'px';
+      heart.style.top = y + 'px';
+      heart.textContent = '💖';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 2000);
+    }
+
+    // YES click -> show picture + happy text
+    yesBtn.addEventListener("click", () => {
+      questionText.style.display = "none";
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
       imageContainer.style.display = "block";
       happyText.style.display = "block";
     });
 
-    // NO RUNS AWAY
-    noBtn.addEventListener("mouseover", () => {
-      const containerRect = container.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+    // NO button tap (mobile-friendly)
+    noBtn.addEventListener("click", () => {
+      // Shrink NO
+      noSize *= 0.8;
+      noSize = Math.max(noSize, 10); // don't shrink too much
+      noBtn.style.fontSize = noSize + "px";
 
-      const maxX = containerRect.width - btnRect.width;
-      const maxY = containerRect.height - btnRect.height;
+      // Grow YES
+      yesSize *= 1.1;
+      yesSize = Math.min(yesSize, 40); // limit max size
+      yesBtn.style.fontSize = yesSize + "px";
+
+      // Random color for NO
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      noBtn.style.backgroundColor = randomColor;
+
+      // Move NO randomly but stay within viewport
+      const btnRect = noBtn.getBoundingClientRect();
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      const maxX = screenWidth - btnRect.width - 10;
+      const maxY = screenHeight - btnRect.height - 10;
 
       const randomX = Math.random() * maxX;
       const randomY = Math.random() * maxY;
 
+      noBtn.style.position = "absolute";
       noBtn.style.left = randomX + "px";
       noBtn.style.top = randomY + "px";
-      noBtn.style.transform = "translate(0, 0)";
+
+      // Floating heart
+      createHeart(randomX + btnRect.width/2, randomY);
     });
   </script>
 
